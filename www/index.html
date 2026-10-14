@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Pomofocus Clone</title>
+  <style>
+    :root {
+      --bg-color: #ba4949;
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --text-main: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      transition: background-color 0.4s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .timer-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px 16px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .mode-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .mode-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .mode-btn.active {
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .timer-display {
+      font-size: 84px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin: 10px 0 24px;
+    }
+
+    .start-btn {
+      background: white;
+      color: var(--bg-color);
+      border: none;
+      border-radius: 8px;
+      padding: 14px 48px;
+      font-size: 22px;
+      font-weight: 800;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 6px 0 rgb(235, 235, 235);
+      transition: transform 0.1s, color 0.4s;
+    }
+
+    .start-btn.running {
+      transform: translateY(6px);
+      box-shadow: none;
+    }
+
+    .status-text {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .status-text .count {
+      opacity: 0.7;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .status-text .focus-msg {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .tasks-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .clear-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .task-item {
+      background: white;
+      color: #333;
+      border-radius: 6px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 6px solid transparent;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .task-item.selected {
+      border-left-color: #222;
+    }
+
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+    }
+
+    .check-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #eee;
+      color: transparent;
+      font-size: 13px;
+    }
+
+    .task-item.done .check-circle {
+      background: #ba4949;
+      border-color: #ba4949;
+      color: white;
+    }
+
+    .task-item.done .task-title {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+
+    .task-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #888;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .delete-task {
+      background: none;
+      border: none;
+      color: #bbb;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .add-task-btn {
+      width: 100%;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.12);
+      border: 2px dashed rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .task-form {
+      background: white;
+      color: #333;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .task-form.open {
+      display: block;
+    }
+
+    .task-form input[type="text"] {
+      width: 100%;
+      border: none;
+      font-size: 18px;
+      font-weight: 600;
+      outline: none;
+      margin-bottom: 16px;
+      padding: 4px 0;
+    }
+
+    .est-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .est-input {
+      width: 65px;
+      padding: 6px;
+      font-size: 16px;
+      font-weight: 700;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      background: #efefef;
+      margin: -16px;
+      margin-top: 8px;
+      padding: 12px 16px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
+    .btn-cancel {
+      background: none;
+      border: none;
+      color: #666;
+      font-weight: 700;
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+
+    .btn-save {
+      background: #222;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .summary-bar {
+      background: rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 16px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-around;
+      font-size: 15px;
+    }
+
+    .summary-bar span {
+      font-weight: 800;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>✔️ Pomofocus</h1>
+    </header>
+
+    <div class="timer-card">
+      <div class="mode-tabs">
+        <button class="mode-btn active" onclick="switchMode('pomodoro')">Pomodoro</button>
+        <button class="mode-btn" onclick="switchMode('short')">Short Break</button>
+        <button class="mode-btn" onclick="switchMode('long')">Long Break</button>
+      </div>
+
+      <div class="timer-display" id="timerDisplay">25:00</div>
+      <button class="start-btn" id="startBtn" onclick="toggleTimer()">START</button>
+    </div>
+
+    <div class="status-text">
+      <div class="count" id="sessionCount">#1</div>
+      <div class="focus-msg" id="focusMsg">Time to focus!</div>
+    </div>
+
+    <div class="tasks-header">
+      <span>Tasks</span>
+      <button class="clear-btn" onclick="clearFinished()">Clear Finished</button>
+    </div>
+
+    <div class="task-list" id="taskList"></div>
+
+    <div class="task-form" id="taskForm">
+      <input type="text" id="taskInput" placeholder="What are you working on?" />
+      <div class="est-row">
+        <span>Est Pomodoros</span>
+        <input type="number" id="estInput" class="est-input" value="1" min="1" max="20" />
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="toggleTaskForm(false)">Cancel</button>
+        <button class="btn-save" onclick="saveTask()">Save</button>
+      </div>
+    </div>
+
+    <button class="add-task-btn" id="addTaskBtn" onclick="toggleTaskForm(true)">+ Add Task</button>
+
+    <div class="summary-bar">
+      <div>Pomos: <span id="pomoStats">0/0</span></div>
+      <div>Finish At: <span id="finishTime">--:--</span></div>
+    </div>
+  </div>
+
+  <script>
+    const MODES = {
+      pomodoro: { time: 25 * 60, color: '#ba4949', msg: 'Time to focus!' },
+      short: { time: 5 * 60, color: '#38858a', msg: 'Time for a break!' },
+      long: { time: 15 * 60, color: '#397097', msg: 'Time for a long break!' }
+    };
+
+    let currentMode = 'pomodoro';
+    let timeLeft = MODES.pomodoro.time;
+    let isRunning = false;
+    let timerInterval = null;
+    let pomosCompleted = 1;
+    let tasks = JSON.parse(localStorage.getItem('pomo_tasks') || '[]');
+    let selectedTaskId = tasks.length ? tasks[0].id : null;
+
+    function playAlarm() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [523.25, 659.25, 783.99].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + idx * 0.18);
+        osc.stop(ctx.currentTime + idx * 0.18 + 0.15);
+      });
+    }
+
+    function updateDisplay() {
+      const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+      const s = String(timeLeft % 60).padStart(2, '0');
+      document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+    }
+
+    function switchMode(mode) {
+      pauseTimer();
+      currentMode = mode;
+      timeLeft = MODES[mode].time;
+      document.documentElement.style.setProperty('--bg-color', MODES[mode].color);
+
+      document.querySelectorAll('.mode-btn').forEach((btn, idx) => {
+        const keys = ['pomodoro', 'short', 'long'];
+        btn.classList.toggle('active', keys[idx] === mode);
+      });
+
+      updateStatusMessage();
+      updateDisplay();
+    }
+
+    function toggleTimer() {
+      if (isRunning) {
+        pauseTimer();
+      } else {
+        startTimer();
+      }
+    }
+
+    function startTimer() {
+      isRunning = true;
+      const btn = document.getElementById('startBtn');
+      btn.textContent = 'PAUSE';
+      btn.classList.add('running');
+
+      timerInterval = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateDisplay();
+        } else {
+          completeSession();
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      isRunning = false;
+      clearInterval(timerInterval);
+      const btn = document.getElementById('startBtn');
+      btn.textContent = 'START';
+      btn.classList.remove('running');
+    }
+
+    function completeSession() {
+      pauseTimer();
+      playAlarm();
+
+      if (currentMode === 'pomodoro') {
+        pomosCompleted++;
+        document.getElementById('sessionCount').textContent = `#${pomosCompleted}`;
+        const activeTask = tasks.find(t => t.id === selectedTaskId);
+        if (activeTask) {
+          activeTask.act++;
+          saveToStorage();
+          renderTasks();
+        }
+        switchMode((pomosCompleted - 1) % 4 === 0 ? 'long' : 'short');
+      } else {
+        switchMode('pomodoro');
+      }
+    }
+
+    function toggleTaskForm(open) {
+      document.getElementById('taskForm').classList.toggle('open', open);
+      document.getElementById('addTaskBtn').style.display = open ? 'none' : 'block';
+      if (open) document.getElementById('taskInput').focus();
+    }
+
+    function saveTask() {
+      const title = document.getElementById('taskInput').value.trim();
+      const est = parseInt(document.getElementById('estInput').value) || 1;
+      if (!title) return;
+
+      const newTask = { id: Date.now(), title, est, act: 0, done: false };
+      tasks.push(newTask);
+      if (!selectedTaskId) selectedTaskId = newTask.id;
+
+      document.getElementById('taskInput').value = '';
+      document.getElementById('estInput').value = '1';
+      toggleTaskForm(false);
+      saveToStorage();
+      renderTasks();
+    }
+
+    function selectTask(id) {
+      selectedTaskId = id;
+      renderTasks();
+    }
+
+    function toggleDone(e, id) {
+      e.stopPropagation();
+      const task = tasks.find(t => t.id === id);
+      if (task) task.done = !task.done;
+      saveToStorage();
+      renderTasks();
+    }
+
+    function deleteTask(e, id) {
+      e.stopPropagation();
+      tasks = tasks.filter(t => t.id !== id);
+      if (selectedTaskId === id) selectedTaskId = tasks.length ? tasks[0].id : null;
+      saveToStorage();
+      renderTasks();
+    }
+
+    function clearFinished() {
+      tasks = tasks.filter(t => !t.done);
+      saveToStorage();
+      renderTasks();
+    }
+
+    function saveToStorage() {
+      localStorage.setItem('pomo_tasks', JSON.stringify(tasks));
+    }
+
+    function updateStatusMessage() {
+      const activeTask = tasks.find(t => t.id === selectedTaskId);
+      const msgEl = document.getElementById('focusMsg');
+      if (currentMode === 'pomodoro' && activeTask) {
+        msgEl.textContent = activeTask.title;
+      } else {
+        msgEl.textContent = MODES[currentMode].msg;
+      }
+    }
+
+    function renderTasks() {
+      const listEl = document.getElementById('taskList');
+      listEl.innerHTML = '';
+
+      let totalEst = 0;
+      let totalAct = 0;
+
+      tasks.forEach(t => {
+        if (!t.done) {
+          totalEst += t.est;
+          totalAct += t.act;
+        }
+
+        const item = document.createElement('div');
+        item.className = `task-item ${t.id === selectedTaskId ? 'selected' : ''} ${t.done ? 'done' : ''}`;
+        item.onclick = () => selectTask(t.id);
+
+        item.innerHTML = `
+          <div class="task-left">
+            <div class="check-circle" onclick="toggleDone(event, ${t.id})">✓</div>
+            <span class="task-title">${t.title}</span>
+          </div>
+          <div class="task-right">
+            <span>${t.act} / ${t.est}</span>
+            <button class="delete-task" onclick="deleteTask(event, ${t.id})">×</button>
+          </div>
+        `;
+        listEl.appendChild(item);
+      });
+
+      updateStatusMessage();
+
+      document.getElementById('pomoStats').textContent = `${totalAct} / ${totalEst}`;
+      const remainingPomos = Math.max(0, totalEst - totalAct);
+      const finishDate = new Date(Date.now() + remainingPomos * 30 * 60000);
+      const fh = String(finishDate.getHours()).padStart(2, '0');
+      const fm = String(finishDate.getMinutes()).padStart(2, '0');
+      document.getElementById('finishTime').textContent = `${fh}:${fm}`;
+    }
+
+    renderTasks();
+    updateDisplay();
+  </script>
+</body>
+</html>

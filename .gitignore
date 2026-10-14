@@ -1,0 +1,15 @@
+# Environment & Secrets
+.env
+*.env
+
+# Antigravity & Editor Caches
+.antigravity/
+.agy/
+.vscode/
+
+# Dependencies & Build Artifacts
+node_modules/
+__pycache__/
+.venv/
+dist/
+build/

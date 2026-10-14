@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pomofocus</string>
+    <string name="title_activity_main">Pomofocus</string>
+    <string name="package_name">com.celestine.pomofocus</string>
+    <string name="custom_url_scheme">com.celestine.pomofocus</string>
+</resources>
